@@ -1,3 +1,14 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Zhangx
+  Date: 2017/5/9
+  Time: 10:03
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page pageEncoding="UTF-8" %>
+
+<%@ page contentType="text/html" language="java" %>
 <html>
 <head>
     <title>Title</title>
@@ -46,8 +57,8 @@
         </div>
     </form>
     <div style="text-align:center;padding:5px 0">
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">Submit</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">Clear</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">提交</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">重填</a>
     </div>
 </div>
 <script>
@@ -58,7 +69,6 @@
         $('#onBusiness').form('clear');
     }
 </script>
-
-
 </body>
 </html>
+
