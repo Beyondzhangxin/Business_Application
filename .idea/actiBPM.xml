@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BPMNEditorStateService">
+    <stateFile url="file://$PROJECT_DIR$/src/main/resources/diagram/onBusiness.bpmn">
+      <view grid="false" />
+    </stateFile>
+    <stateFile url="file://$PROJECT_DIR$/src/main/resources/diagram/aaadfadsf.bpmn">
+      <view grid="false" />
+    </stateFile>
     <stateFile url="file://$PROJECT_DIR$/src/main/resources/diagram/businessApplication.bpmn">
+      <view grid="false" />
+    </stateFile>
+    <stateFile url="file://$PROJECT_DIR$/src/main/resources/diagram/onBusiness.bpmn">
+      <view grid="false" />
+    </stateFile>
+    <stateFile url="file://$PROJECT_DIR$/src/main/resources/diagram/leaveBill2.bpmn">
+      <view grid="false" />
+    </stateFile>
+    <stateFile url="file://$PROJECT_DIR$/src/main/resources/diagram/helloworld.bpmn">
+      <view grid="false" />
+    </stateFile>
+    <stateFile url="file://$PROJECT_DIR$/src/main/resources/diagram/leaveBill2.bpmn">
       <view grid="false" />
     </stateFile>
   </component>

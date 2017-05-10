@@ -1,3 +1,4 @@
+<%@ page pageEncoding="UTF-8" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -22,27 +23,19 @@
             }
 
             $.ajax({
-                url: "login",
+                url: "login.do",
                 type: "post",
                 data: {
                     username: username,
                     password: passwd
                 },
 
-                dataType: "json",
+                dataType: "text",
                 error: function () {
                     $("#msg").html("登录失败");
                 },
                 success: function (result) {
-                    if (result.status == 0) {
-                        window.location.href = "logon/prepare.do";
-                    }
-                    if (result.status == 1) {
-                        $("#msg").html(result.msg);
-                    }
-                    if (result.status == 2) {
-                        $("#msg").html(result.msg);
-                    }
+                    window.location.href='logon.do';
                 }
             });
         }
@@ -70,7 +63,7 @@
 <body onload="movePanel()" onresize="movePanel()">
 <div class="easyui-panel" id="loginPanel"
      data-options="iconCls:'icon-login',style:{position:'absolute'}"
-     title="航天智慧内容管理系统"
+     title="航天智慧工作流程管理系统"
      style="width: 100%; max-width: 400px; max-height: 300px; padding: 30px 60px; fit: false">
     <div style="margin-bottom: 10px">
         <input class="easyui-textbox" id="j_username" name="j_username"
