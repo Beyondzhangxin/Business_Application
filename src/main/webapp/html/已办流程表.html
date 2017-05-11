@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>已办流程</title>
+    <link rel="stylesheet" type="text/css" href="/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="/themes/cms.css">
+    <link rel="stylesheet" type="text/css" href="/css/common.css">
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<table id="done_dg" class="easyui-datagrid" title="Basic DataGrid" style="width:700px;height:250px"
+       data-options="singleSelect:true,collapsible:true,url:'datagrid_data1.json',method:'get'"></table>
+
+<script>
+    $("#done_dg").datagrid(
+        {
+            url: 'url',
+            idField: 'id',
+            fitColumns: true,
+            striped: true,
+            loadMsg: '加载中.......',
+            toolbar: '#toorbar',
+            pagination: true,
+            total: totalrows,
+            columns: [[
+                {
+                    field: 'field',
+                    title: '流程编号',
+                    align: 'center',
+                    width: width
+                },
+                {
+                    field: 'field',
+                    title: '标题',
+                    align: 'center',
+                    width: width
+                },
+                {
+                    field: 'field',
+                    title: '申请人',
+                    align: 'center',
+                    width: width
+                },
+                {
+                    field: 'field',
+                    title: '申请时间',
+                    align: 'center',
+                    width: width
+                },
+                {
+                    field: 'field',
+                    title: '流程状态',
+                    align: 'center',
+                    width: width
+                },
+                {
+                    field: 'field',
+                    title: '到达人',
+                    align: 'center',
+                    width: width
+                },
+                {
+                    field: 'field',
+                    title: '到达时间',
+                    align: 'center',
+                    width: width
+                }
+            ]]
+        }
+    );
+</script>
+</body>
+</html>

@@ -14,22 +14,10 @@
 <div  align="center" style="width:100%;max-width:300px;padding:30px 60px;text-align: center">
     <form id="onBusiness" method="post">
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" name="name" style="width:100%" data-options="label:'姓名:',required:true">
+            <input class="easyui-datebox" name="startDate" label="Start Date:" labelPosition="left" style="width:100%;">
         </div>
         <div style="margin-bottom:20px">
-            <select class="easyui-combobox" name="dept" label="部门" style="width:100%">
-                <option value="bj">北京总部</option>
-                <option value="cd">成都软件事业部</option>
-                <option value="sh">上海事业部</option>
-                <option value="nj">南京事业部</option>
-                <option value="wh">佛山事业部</option>
-            </select>
-        </div>
-        <div style="margin-bottom:20px">
-            <input class="easyui-datebox" label="Start Date:" labelPosition="left" style="width:100%;">
-        </div>
-        <div style="margin-bottom:20px">
-            <input class="easyui-datebox" label="End Date:" labelPosition="left" style="width:100%;">
+            <input class="easyui-datebox" name="endDate" label="End Date:" labelPosition="left" style="width:100%;">
         </div>
         <div style="margin-bottom:20px">
             <input class="easyui-textbox" name="message" style="width:100%;height:60px"
@@ -51,8 +39,11 @@
     </div>
 </div>
 <script>
+
     function submitForm() {
-        $('#onBusiness').form('submit');
+        $('#onBusiness').form('submit',{
+
+        });
     }
     function clearForm() {
         $('#onBusiness').form('clear');

@@ -30,9 +30,9 @@
         <div id="aa" class="easyui-accordion" style="width:100%">
             <div title="工作流程" data-options="iconCls:'icon-workflow'">
                 <a title="/html/流程申请.html">流程申请</a><br />
-                <a title="/html/待办流程.html">待办流程</a><br />
-                <a title="/html/已办流程.html">已办流程</a><br />
-                <a title="/html/已申请流程.html">已申请流程</a><br />
+                <a title="/html/待办流程表.html">待办流程</a><br />
+                <a title="/html/已办流程表.html">已办流程</a><br />
+                <a title="/html/已申请流程表.html">已申请流程</a><br />
                 <a title="/html/流程草稿.html">流程草稿</a>
             </div>
             <div title="用户管理" data-options="iconCls:'icon-user'"></div>
@@ -41,7 +41,7 @@
     <div region="center" class="easyui-tabs" split="false" id="mainTab">
     </div>
     <div data-options="region:'south',split:true" style="height:50px;"><p align="center" width="100%">Copyright
-        ©1996-2017 航天科工智慧产业发展有限公司</p></div>
+        ©2014-2017 航天科工智慧产业发展有限公司</p></div>
 </div>
 <script>
     $(function () {

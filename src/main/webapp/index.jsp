@@ -30,12 +30,18 @@
                     password: passwd
                 },
 
-                dataType: "text",
+                dataType: "json",
                 error: function () {
                     $("#msg").html("登录失败");
                 },
                 success: function (result) {
-                    window.location.href='logon.do';
+                    if (result.status == 0) {
+                        window.location.href = 'logon.do';
+                    } else if(result.status==1){
+                        $("#msg").html("密码不对");
+                    } else {
+                        $("#msg").html("用户不存在");
+                    }
                 }
             });
         }
