@@ -42,7 +42,13 @@
 
     function submitForm() {
         $('#onBusiness').form('submit',{
-
+            url:'onBusiness/startProcess.do',
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function () {
+                $('#w').window('close');
+            }
         });
     }
     function clearForm() {

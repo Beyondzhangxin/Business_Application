@@ -35,7 +35,9 @@
                 <a title="/html/已申请流程表.html">已申请流程</a><br />
                 <a title="/html/流程草稿.html">流程草稿</a>
             </div>
-            <div title="用户管理" data-options="iconCls:'icon-user'"></div>
+            <div title="流程设置" data-options="iconCls:'icon-user'">
+                <a title="/html/流程设置.html">办理人设置</a><br />
+            </div>
         </div>
     </div>
     <div region="center" class="easyui-tabs" split="false" id="mainTab">
