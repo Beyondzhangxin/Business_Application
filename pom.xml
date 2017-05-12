@@ -10,7 +10,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.springframework</groupId>
+                <groupId>org.springframe   work</groupId>
                 <artifactId>spring-framework-bom</artifactId>
                 <version>4.3.8.RELEASE</version>
                 <type>pom</type>
