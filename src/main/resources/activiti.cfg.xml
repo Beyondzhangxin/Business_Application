@@ -26,5 +26,7 @@
     <bean id="formService" factory-bean="processEngine" factory-method="getFormService"/>
     <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService"/>
 
-
+    <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="defaultCharset" value="UTF-8"/>
+    </bean>
 </beans>

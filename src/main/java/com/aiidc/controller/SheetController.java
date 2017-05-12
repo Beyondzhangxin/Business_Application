@@ -5,6 +5,8 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.impl.util.json.JSONArray;
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -17,10 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Zhangx on 2017/5/5 at 13:45.
@@ -83,7 +82,7 @@ public class SheetController
         return null;
     }
 
-
+    //query the latest process definition list
     @RequestMapping("processDefList")
     @ResponseBody
     public String processQuery()
@@ -98,32 +97,55 @@ public class SheetController
         }
         for (Map.Entry<String, String> entry : map.entrySet())
         {
-            jsonArray.put(new JSONObject().put("processDefName", entry.getKey()).put("processDefId", entry.getValue()));
+            String name = repositoryService.createProcessDefinitionQuery().processDefinitionId(entry.getValue()).singleResult().getName();
+            jsonArray.put(new JSONObject().put("processDefName", name).put("processDefId", entry.getValue()));
+        }
+        return jsonArray.toString();
+    }
+
+    @RequestMapping( "taskDefList" )
+    @ResponseBody
+    public String taskDefListByProcessDefId(HttpServletRequest servletRequest)
+    {
+        String processDefId = servletRequest.getParameter("processDefId");
+        ProcessDefinitionEntity processDefinitionEntity = (ProcessDefinitionEntity) repositoryService.getProcessDefinition(processDefId);
+        Collection<TaskDefinition> taskDefinitions = processDefinitionEntity.getTaskDefinitions().values();
+        JSONArray jsonArray = new JSONArray();
+        for (TaskDefinition taskDefinition : taskDefinitions)
+        {
+                       jsonArray.put(new JSONObject().put("taskId",taskDefinition.getKey()).put("taskName",taskDefinition.getNameExpression().getExpressionText()).put("assignee",taskDefinition.getAssigneeExpression()));
         }
         return jsonArray.toString();
     }
 
 
-
-
-
     @RequestMapping("test")
-    public void test(HttpServletRequest servletRequest)
+    @ResponseBody
+    public String test(HttpServletRequest servletRequest)
     {
-        /*List<Task> taskList = taskService.createTaskQuery().active().list();
+        List<Task> taskList = taskService.createTaskQuery().active().list();
 
         ProcessDefinitionEntity processDefinitionEntity = (ProcessDefinitionEntity) repositoryService.getProcessDefinition("onBusiness:4:57504");
-        System.out.println(processDefinitionEntity.getId());
-        System.out.println(processDefinitionEntity.getName());
-        System.out.println(processDefinitionEntity.getKey());
-        System.out.println(processDefinitionEntity.getProperties().toString());
-        System.out.println(processDefinitionEntity.getVariables().isEmpty());
-        System.out.println(processDefinitionEntity.getTaskDefinitions().toString());*/
-        /*Map<String,Object> map = new HashMap<String ,Object>();
-        map.put("key","1");
-        map.put("key","2");
-        System.out.println(map.toString());
-*/
+//        System.out.println(processDefinitionEntity.getId());
+//        System.out.println(processDefinitionEntity.getName());
+//        System.out.println(processDefinitionEntity.getKey());
+//        System.out.println(processDefinitionEntity.getProperties().toString());
+//        System.out.println(processDefinitionEntity.getVariables().isEmpty());
+//        System.out.println(processDefinitionEntity.getTaskDefinitions().get("userTask1").getKey());
+//        System.out.println(processDefinitionEntity.getTaskDefinitions().get("userTask1").getAssigneeExpression());
+        System.out.println(processDefinitionEntity.getTaskDefinitions().get("userTask1").getNameExpression());
+        Collection<TaskDefinition> values = processDefinitionEntity.getTaskDefinitions().values();
+        for (TaskDefinition taskDefinition : values)
+        {
+            System.out.println(taskDefinition.getNameExpression());
+//            System.out.println(taskDefinition.getKey());
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("key", "1");
+        map.put("key", "2");
+        System.out.println(processDefinitionEntity.getTaskDefinitions().get("userTask1").getNameExpression().getExpressionText());
+        return processDefinitionEntity.getTaskDefinitions().get("userTask1").getNameExpression().getExpressionText();
+//        System.out.println(map.toString());
 
 
        /* for (Task task : taskList)

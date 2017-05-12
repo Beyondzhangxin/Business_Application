@@ -1,4 +1,4 @@
-var transposedview = $.extend({}, $.fn.datagrid.defaults.view, {
+	var transposedview = $.extend({}, $.fn.datagrid.defaults.view, {
 	render: function(target, container, frozen){
 	
 		$('.datagrid-view1', $(target).parent()).css('display', 'none');

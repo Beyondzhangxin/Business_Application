@@ -18,7 +18,8 @@
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="text/javascript" src="/js/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="/js/easyui-lang-zh_CN.js"></script>
-
+    <script type="text/javascript" src="/js/datagrid-transposedview.js"></script>
+    <script type="text/javascript" src="/js/datagrid-detailview.js"></script>
 </head>
 <body>
 <!--主面板，包含东西南北四个panel-->
