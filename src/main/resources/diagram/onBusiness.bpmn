@@ -3,7 +3,7 @@
   <process id="onBusiness" isClosed="false" isExecutable="true" processType="None">
     <startEvent id="_2" name="StartEvent"/>
     <userTask activiti:assignee="${loginUser}" activiti:exclusive="true" id="userTask1" name="提交"/>
-    <userTask activiti:assignee="${manager}" activiti:exclusive="true" id="userTask2" name="经理提交"/>
+    <userTask activiti:assignee="${manager}" activiti:async="false" activiti:exclusive="true" id="userTask2" name="经理提交"/>
     <sequenceFlow id="_6" sourceRef="_2" targetRef="userTask1"/>
     <sequenceFlow id="_7" sourceRef="userTask1" targetRef="userTask2"/>
     <userTask activiti:assignee="${general}" activiti:exclusive="true" id="userTask3" name="总经理提交"/>
