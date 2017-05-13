@@ -32,7 +32,7 @@
             view: detailview,
             url: '/onBusiness/processDefList.do',
             idField: 'processDefId',
-            detailFormatter: function (index, row) {
+            detailFormatter: function () {
                 return '<div style="padding:2px"><table class="ddv"></table></div>';
             },
             onExpandRow: function (index, row) {
@@ -45,12 +45,15 @@
                     rownumbers: false,
                     loadMsg: '',
                     height: 'auto',
-                    onBeforeCellEdit:function () {
+                    onBeforeCellEdit: function () {
                         ddv.datagrid('acceptChanges');
                     },
-                    onEndEdit: function(){
+                    onEndEdit: function () {
                         var rows = ddv.datagrid('getChanges');
-                         console.log(rows[0]);
+                        if(rows.length>0){
+                            var task= JSON.stringify(rows[0]);
+                        $.post('/onBusiness/ProcdefAssignee.do',{task:task,processDefId:row.processDefId});
+                        }
                     },
                     columns: [[
                         {field: 'taskId', title: '任务ID', width: 200},
