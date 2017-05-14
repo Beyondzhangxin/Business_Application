@@ -1,10 +1,8 @@
 package com.aiidc.controller;
 
 import com.aiidc.entity.ActIdUser;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.el.ExpressionManager;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.task.TaskDefinition;
@@ -34,9 +32,11 @@ public class SheetController
     @Autowired
     private RuntimeService runtimeService;
     @Autowired
+    private RepositoryService repositoryService;
+    @Autowired
     private TaskService taskService;
     @Autowired
-    private RepositoryService repositoryService;
+    private HistoryService historyService;
 
     //start the process instance
     @RequestMapping("startProcess")
@@ -127,11 +127,14 @@ public class SheetController
             {
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(task.getCreateTime());
 
-                ActIdUser actIdUser = (ActIdUser) (runtimeService.getVariable(task.getExecutionId(), "loginUser"));             String initializer;
-                if (actIdUser!=null){
-                         initializer=actIdUser.getFirst();
-                } else {
-                      initializer="anonymous";
+                ActIdUser actIdUser = (ActIdUser) (runtimeService.getVariable(task.getExecutionId(), "loginUser"));
+                String initializer;
+                if (actIdUser != null)
+                {
+                    initializer = actIdUser.getFirst();
+                } else
+                {
+                    initializer = "anonymous";
                 }
 
                 String processName = repositoryService.createProcessDefinitionQuery().processDefinitionId(task.getProcessDefinitionId()).singleResult().getName();
@@ -151,9 +154,9 @@ public class SheetController
         String procId = servletRequest.getParameter("procId");
         Map<String, Object> variables = runtimeService.getVariables(procId);
         Object loginUser = variables.get("loginUser");
-        ActIdUser user = (ActIdUser)loginUser;
-        String name=((ActIdUser) loginUser).getFirst();
-        variables.put("loginUser",name);
+        ActIdUser user = (ActIdUser) loginUser;
+        String name = ((ActIdUser) loginUser).getFirst();
+        variables.put("loginUser", name);
         JSONObject jsonObject = new JSONObject(variables);
         return jsonObject.toString();
 
@@ -176,18 +179,47 @@ public class SheetController
                 .complete(taskId, variables);
     }
 
+    @RequestMapping("historicPersonalTask")
+    @ResponseBody
+    public String historicPersonalTask(HttpServletRequest servletRequest)
+    {
+        ActIdUser currentUser = (ActIdUser) servletRequest.getSession().getAttribute("loginUser");
+        List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery().taskAssignee(currentUser.getFirst()).list();
+        JSONArray jsonArray = new JSONArray();
+        for (HistoricTaskInstance historicTaskInstance : historicTaskInstances)
+        {
+             String endTime;
+             if (historicTaskInstance.getEndTime()!=null){
+                 endTime=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(historicTaskInstance.getEndTime());
+             }else endTime=null;
+            jsonArray.put(new JSONObject().put("processInstanceId",historicTaskInstance.getProcessInstanceId()).put("processType",repositoryService.getProcessDefinition(historicTaskInstance.getProcessDefinitionId()).getName()).put("taskName",historicTaskInstance.getName()).put("startDate",new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(historicTaskInstance.getCreateTime())).put("endDate",endTime));
+        }
+        return  jsonArray.toString();
+    }
+
+    public String  historicPersonalProcess(HttpServletRequest servletRequest){
+                  return null;
+    }
+
+
+
+
 
     @RequestMapping("test")
     @ResponseBody
     public Object test(HttpServletRequest servletRequest)
     {
-        Map<String, Object> variables = runtimeService.getVariables("80004");
-        Object loginUser = variables.get("loginUser");
-        ActIdUser user = (ActIdUser) loginUser;
-        String name = ((ActIdUser) loginUser).getFirst();
-        variables.put("loginUser", name);
-        System.out.println(variables.toString());
-
+        ActIdUser currentUser = (ActIdUser) servletRequest.getSession().getAttribute("loginUser");
+        List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery().taskAssignee(currentUser.getFirst()).list();
+        for (HistoricTaskInstance taskInstance : historicTaskInstances)
+        {
+            System.out.println(taskInstance.getProcessInstanceId());
+            System.out.println(historyService.createHistoricProcessInstanceQuery().processInstanceId(taskInstance.getProcessInstanceId()).singleResult().getId());
+            System.out.println(historyService.createHistoricProcessInstanceQuery().processInstanceId(taskInstance.getProcessInstanceId()).singleResult().getBusinessKey());
+            System.out.println(historyService.createHistoricProcessInstanceQuery().processInstanceId(taskInstance.getProcessInstanceId()).singleResult().getName());
+            System.out.println(historyService.createHistoricProcessInstanceQuery().processInstanceId(taskInstance.getProcessInstanceId()).singleResult().getStartTime());
+            System.out.println(historyService.createHistoricProcessInstanceQuery().processInstanceId(taskInstance.getProcessInstanceId()).singleResult().getEndTime());
+        }
         return "测试中";
 
 

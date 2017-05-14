@@ -12,7 +12,7 @@
     <script type="text/javascript" src="/js/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
-<table id="tobedone_dg" class="easyui-datagrid" title="待办流程" style="width:700px;height:250px"></table>
+<table id="tobedone_dg" class="easyui-datagrid" title="待办流程" style="width:100%;height:100%"></table>
 <div id="w2" class="easyui-window" title="申请内容" data-options="iconCls:'icon-save',closed:true"
      style="width:500px;height:200px;padding:10px;">
     <form id="ff" method="post">
@@ -61,7 +61,6 @@
         {
             url: '/onBusiness/waitingProcess.do',
             idField: 'taskId',
-            fitColumns: true,
             striped: true,
             loadMsg: '加载中.......',
             toolbar: '#toorbar',

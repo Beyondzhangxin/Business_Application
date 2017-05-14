@@ -11,62 +11,50 @@
     <script type="text/javascript" src="/js/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
-<table id="done_dg" class="easyui-datagrid" title="Basic DataGrid" style="width:700px;height:250px"
-       data-options="singleSelect:true,collapsible:true,url:'datagrid_data1.json',method:'get'"></table>
+<table id="done_dg" class="easyui-datagrid" title="Basic DataGrid" style="width:100%;height:100%"
+       data-options="singleSelect:true,collapsible:true,method:'get'"></table>
 
 <script>
     $("#done_dg").datagrid(
         {
-            url: 'url',
+            url: '/onBusiness/historicPersonalTask.do',
             idField: 'id',
             fitColumns: true,
             striped: true,
             loadMsg: '加载中.......',
-            toolbar: '#toorbar',
             pagination: true,
-            total: totalrows,
             columns: [[
                 {
-                    field: 'field',
+                    field: 'processInstanceId',
                     title: '流程编号',
                     align: 'center',
-                    width: width
                 },
                 {
-                    field: 'field',
-                    title: '标题',
+                    field: 'processType',
+                    title: '流程类型',
                     align: 'center',
-                    width: width
                 },
                 {
-                    field: 'field',
-                    title: '申请人',
+                    field: 'taskName',
+                    title: '任务名称',
                     align: 'center',
-                    width: width
                 },
                 {
-                    field: 'field',
-                    title: '申请时间',
+                    field: 'startDate',
+                    title: '开始时间',
                     align: 'center',
-                    width: width
                 },
                 {
-                    field: 'field',
-                    title: '流程状态',
+                    field: 'endDate',
+                    title: '结束时间',
                     align: 'center',
-                    width: width
-                },
-                {
-                    field: 'field',
-                    title: '到达人',
-                    align: 'center',
-                    width: width
-                },
-                {
-                    field: 'field',
-                    title: '到达时间',
-                    align: 'center',
-                    width: width
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return value;
+                        } else {
+                            return "未结束";
+                        }
+                    }
                 }
             ]]
         }

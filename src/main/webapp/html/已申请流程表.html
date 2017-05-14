@@ -12,15 +12,43 @@
 </head>
 <body>
 <div style="margin:20px 0 10px 0;">
-    <a href="#" class="easyui-linkbutton" onclick="javascript:$('#_on').panel('open');$('#_over').panel('close');">进行中</a>
-    <a href="#" class="easyui-linkbutton" onclick="javascript:$('#_over').panel('open');$('#_on').panel('close');">已结束</a>
+    <a href="#" class="easyui-linkbutton"
+       onclick="javascript:$('#_on').panel('open');$('#_over').panel('close');">进行中</a>
+    <a href="#" class="easyui-linkbutton"
+       onclick="javascript:$('#_over').panel('open');$('#_on').panel('close');">已结束</a>
 </div>
-<div id="_on" class="easyui-panel" title="进行中的流程" style="width:700px;height:200px;padding:10px;">
-    <p style="font-size:14px">jQuery EasyUI framework helps you build your web pages easily.</p>
+<div id="_on" class="easyui-panel" title="进行中的流程" style="padding:10px;">
+    <table id="runningPersonalProcess_dg"></table>
 </div>
-<div id="_over" class="easyui-panel" closed="true" title="已结束的流程" style="width:700px;height:200px;padding:10px;">
-    <p style="font-size:14px">jQuery EasyUI framework helps you build your web pages easily.</p>
+<div id="_over" class="easyui-panel" closed="true" title="已结束的流程" style="padding:10px;">
+    <table id="endedPersonalProcess_dg"></table>
 </div>
+<script>
+    $("#runningPersonalProcess_dg").datagrid(
+        {
+            url: 'url',
+            idField: 'id',
+            fitColumns: true,
+            striped: true,
+            loadMsg: '加载中.......',
+            toolbar: '#toorbar',
+            pagination: true,
+            total: totalrows,
+            columns: [[
+                {
+                    checkbox: true,
+                    field: 'field',
+                    title: 'title',
+                    align: 'center',
+                    width: width
+                }
+            ]]
+        }
+    );
+
+</script>
+
+
 
 </body>
 </html>
