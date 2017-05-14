@@ -1,6 +1,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>待办流程表</title>
     <link rel="stylesheet" type="text/css" href="/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="/themes/icon.css">
@@ -11,56 +12,106 @@
     <script type="text/javascript" src="/js/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
-<table id="tobedone_dg" class="easyui-datagrid" title="Basic DataGrid" style="width:700px;height:250px"
-       data-options="singleSelect:true,collapsible:true,url:'datagrid_data1.json',method:'get'"></table>
+<table id="tobedone_dg" class="easyui-datagrid" title="待办流程" style="width:700px;height:250px"></table>
+<div id="w2" class="easyui-window" title="申请内容" data-options="iconCls:'icon-save',closed:true"
+     style="width:500px;height:200px;padding:10px;">
+    <form id="ff" method="post">
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="loginUser" style="width:100%"
+                   data-options="label:'申请人:',readonly:true,disabled:true">
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="startDate" style="width:100%"
+                   data-options="label:'开始时间:',disabled:true,readonly:true">
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="endDate" style="width:100%"
+                   data-options="label:'结束时间:',readonly:true,disabled:true">
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="message" style="width:100%;height:60px"
+                   data-options="label:'出差原因:',readonly:true,disabled:true">
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="city" style="width:100%;"
+                   data-options="label:'城市:',readonly:true,disabled:true">
+        </div>
+    </form>
+    <form id="review" method="post">
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="message" style="width:100%;height:60px" data-options="label:'审批意见:'">
+        </div>
+        <div style="margin-bottom:20px">
+            <label style="width: auto">是否同意：</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="outcome"
+                                                                                               class="easyui-switchbutton" checked  data-options="onText:'同意',offText:'不同意'">
+        </div>
+        <div style="text-align: center">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="save()"
+               style="align: right; margin: 50px 0px 0 23px; padding: 1px 17px;">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               style="align: right; margin: 50px 0 0 33px; padding: 0 15px;"
+               onclick="javascript:$('#review').form('clear');">重置</a>
+        </div>
+    </form>
+</div>
 
 <script>
     $("#tobedone_dg").datagrid(
         {
-            url: 'url',
-            idField: 'id',
+            url: '/onBusiness/waitingProcess.do',
+            idField: 'taskId',
             fitColumns: true,
             striped: true,
             loadMsg: '加载中.......',
             toolbar: '#toorbar',
             pagination: true,
-            total: totalrows,
+            onClickRow: function click(index, row) {
+                var procId = row.processId;
+                $('#w2').window('open');
+                $('#ff').form('load', '/onBusiness/getProcVars.do?procId=' + procId);
+            },
             columns: [[
                 {
-                    field: 'field',
-                    title: '流程编号',
-                    align: 'center',
-                    width: width
+                    field: 'taskId',
+                    hidden: true
                 },
                 {
-                    field: 'field',
-                    title: '标题',
-                    align: 'center',
-                    width: width
+                    field: 'processId',
+                    title: '流程ID',
+                    align: 'center'
                 },
                 {
-                    field: 'field',
-                    title: '申请人',
-                    align: 'center',
-                    width: width
+                    field: 'initializer',
+                    title: '创建人',
+                    align: 'center'
                 },
                 {
-                    field: 'field',
-                    title: '申请时间',
-                    align: 'center',
-                    width: width
+                    field: 'creatTime',
+                    title: '创建时间',
+                    align: 'center'
                 },
                 {
-                    field: 'field',
-                    title: '到达时间',
-                    align: 'center',
-                    width: width
+                    field: 'processName',
+                    title: '流程名称',
+                    align: 'center'
                 }
             ]]
         }
     );
+    function save() {
+        var rows = $('#tobedone_dg').datagrid('getSelections');
+        var taskId=rows[0].taskId;
+        $.ajax({
+            async:false,
+            url: '/onBusiness/completeTask.do',
+            data: $('#review').serialize() + '&taskId=' + taskId
+        });
+        $('#w2').window('close');
+        $('#tobedone_dg').datagrid('clearSelections');
+        $('#tobedone_dg').datagrid('reload');
+    }
 </script>
-
 
 </body>
 </html>

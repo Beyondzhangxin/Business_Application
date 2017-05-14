@@ -60,28 +60,6 @@ public class SheetController
         taskService.complete(taskList.get(0).getId());
     }
 
-    //query the current user's personal task
-    @RequestMapping("personalTasklist")
-    @ResponseBody
-    public List<Task> findPersonalTask(HttpServletRequest servletRequest)
-    {
-        ActIdUser currentUser = (ActIdUser) servletRequest.getSession().getAttribute("currentuser");
-        String assignee = currentUser.getFirst();
-        List<Task> taskList = processEngine.getTaskService().createTaskQuery().taskAssignee(assignee).list();
-        return taskList;
-
-    }
-
-    public void setAssignees(HttpServletRequest servletRequest)
-    {
-
-    }
-
-    public String processdefAssignessQuery()
-    {
-
-        return null;
-    }
 
     //query the latest process definition list
     @RequestMapping("processDefList")
@@ -147,15 +125,18 @@ public class SheetController
         {
             for (Task task : taskList)
             {
-                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(task.getCreateTime());
-                String initializer = "myself";
-                if ((ActIdUser) task.getProcessVariables().get("loginuser") != null)
-                {
-                    initializer = ((ActIdUser) task.getProcessVariables().get("loginUser")).getFirst();
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(task.getCreateTime());
+
+                ActIdUser actIdUser = (ActIdUser) (runtimeService.getVariable(task.getExecutionId(), "loginUser"));             String initializer;
+                if (actIdUser!=null){
+                         initializer=actIdUser.getFirst();
+                } else {
+                      initializer="anonymous";
                 }
+
                 String processName = repositoryService.createProcessDefinitionQuery().processDefinitionId(task.getProcessDefinitionId()).singleResult().getName();
                 jsonArray.put(new JSONObject().put("processId", task.getProcessInstanceId()).put("initializer", initializer)
-                        .put("creatTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(task.getCreateTime())).put("processName", processName));
+                        .put("creatTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(task.getCreateTime())).put("processName", processName).put("taskId", task.getId()));
             }
         }
 
@@ -163,99 +144,51 @@ public class SheetController
 
     }
 
+    @RequestMapping("getProcVars")
+    @ResponseBody
+    public String getProcessInstanceVars(HttpServletRequest servletRequest)
+    {
+        String procId = servletRequest.getParameter("procId");
+        Map<String, Object> variables = runtimeService.getVariables(procId);
+        Object loginUser = variables.get("loginUser");
+        ActIdUser user = (ActIdUser)loginUser;
+        String name=((ActIdUser) loginUser).getFirst();
+        variables.put("loginUser",name);
+        JSONObject jsonObject = new JSONObject(variables);
+        return jsonObject.toString();
+
+    }
+
+    @RequestMapping("completeTask")
+    public void completeTask(HttpServletRequest servletRequest)
+    {
+
+        String taskId = servletRequest.getParameter("taskId");
+        String outcome = servletRequest.getParameter("outcome");
+        String result = "批准";
+        if (outcome == null)
+        {
+            result = "驳回";
+        }
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put("outcome", result);
+        processEngine.getTaskService()//与正在执行的任务管理相关的Service
+                .complete(taskId, variables);
+    }
+
 
     @RequestMapping("test")
     @ResponseBody
-    public void test(HttpServletRequest servletRequest)
+    public Object test(HttpServletRequest servletRequest)
     {
-       /* List<Task> taskList = taskService.createTaskQuery().executionId("75005").list();
-        for (Task task : taskList)
-        {
-            System.out.println(task.getName());
-        }
+        Map<String, Object> variables = runtimeService.getVariables("80004");
+        Object loginUser = variables.get("loginUser");
+        ActIdUser user = (ActIdUser) loginUser;
+        String name = ((ActIdUser) loginUser).getFirst();
+        variables.put("loginUser", name);
+        System.out.println(variables.toString());
 
-        ProcessDefinitionEntity processDefinitionEntity = (ProcessDefinitionEntity) repositoryService.getProcessDefinition("onBusiness:5:75004");
-//        System.out.println(processDefinitionEntity.getId());
-//        System.out.println(processDefinitionEntity.getName());
-//        System.out.println(processDefinitionEntity.getKey());
-//        System.out.println(processDefinitionEntity.getProperties().toString());
-//        System.out.println(processDefinitionEntity.getVariables().isEmpty());
-//        System.out.println(processDefinitionEntity.getTaskDefinitions().get("userTask1").getKey());
-//        System.out.println(processDefinitionEntity.getTaskDefinitions().get("userTask1").getAssigneeExpression());
-//        System.out.println(processDefinitionEntity.getTaskDefinitions().get("userTask1").getNameExpression());
-        Map<String, TaskDefinition> taskDefinitions = processDefinitionEntity.getTaskDefinitions();
-        for (Map.Entry<String, TaskDefinition> entry : taskDefinitions.entrySet())
-        {
-            entry.getValue().setAssigneeExpression(new ExpressionManager().createExpression("Jason"));
-        }
-
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("key", "1");
-        map.put("key", "2");
-        for (TaskDefinition taskDefinition : processDefinitionEntity.getTaskDefinitions().values())
-        {
-            System.out.println(taskDefinition.getAssigneeExpression().getExpressionText());
-        }
-*/
-//        System.out.println(processDefinitionEntity.getTaskDefinitions().get("userTask1").getNameExpression().getExpressionText());
-//        Expression xjy = new ExpressionManager().createExpression("xjy");
-//        System.out.println(xjy.getExpressionText());
-
-
-//        return processDefinitionEntity.getTaskDefinitions().get("userTask1").getNameExpression().getExpressionText();
-//        System.out.println(map.toString());
-
-
-       /* for (Task task : taskList)
-        {
-
-            System.out.println(task.getId());
-            System.out.println(task.getExecutionId());
-            System.out.println(task.getProcessInstanceId());
-            System.out.println(task.getName());
-            System.out.println(task.getTaskDefinitionKey());
-        }*/
-
-        String assignee = ((ActIdUser) servletRequest.getSession().getAttribute("loginUser")).getFirst();
-
-
-        List<Task> list = taskService//与正在执行的任务管理相关的Service
-                .createTaskQuery()//创建任务查询对象
-//查询条件（where部分）
-
-                .taskAssignee(assignee)//指定个人任务查询，指定办理人
-//						.taskCandidateUser(candidateUser)//组任务的办理人查询
-//						.processDefinitionId(processDefinitionId)//使用流程定义ID查询
-//						.processInstanceId(processInstanceId)//使用流程实例ID查询
-//						.executionId(executionId)//使用执行对象ID查询
-//排序
-
-                .orderByTaskCreateTime().asc()//使用创建时间的升序排列
-//返回结果集
-
-//						.singleResult()//返回惟一结果集
-//						.count()//返回结果集的数量
-//						.listPage(firstResult, maxResults);//分页查询
-                .list();//返回列表
-        if (list != null && list.size() > 0)
-        {
-            for (Task task : list)
-            {
-                System.out.println("任务ID:" + task.getId());
-                System.out.println("任务名称:" + task.getName());
-//                System.out.println("任务的创建时间:" + task.getCreateTime());
-                System.out.println("任务的办理人:" + task.getAssignee());
-                System.out.println("流程实例ID：" + task.getProcessInstanceId());
-                System.out.println("执行对象ID:" + task.getExecutionId());
-                System.out.println("流程定义ID:" + task.getProcessDefinitionId());
-                System.out.println("########################################################");
-                System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(task.getCreateTime()).getClass());
-                System.out.println(repositoryService.createProcessDefinitionQuery().processDefinitionId(task.getProcessDefinitionId()).singleResult().getName());
-            }
-        }
-
-
-
+        return "测试中";
 
 
     }
